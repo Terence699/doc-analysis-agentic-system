@@ -1,0 +1,82 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>华夏收入混合型证券投资基金前十大重仓股看板</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+ body {margin:0;overflow:hidden;width:100vw;height:100svh;background:linear-gradient(135deg,#0a0f1a,#1a1f2e);font-family:"Segoe UI",sans-serif;color:#fff;}
+ header {display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:rgba(255,255,255,0.05);backdrop-filter:blur(6px);}
+ header h1 {font-size:20px;color:#4de0ff;text-shadow:0 0 6px #4de0ff;}
+ header img {height:32px;}
+ header button {background:#4de0ff;border:none;padding:6px 12px;color:#000;border-radius:6px;cursor:pointer;}
+ #main {display:flex;height:calc(100svh - 48px);}
+ .col {flex:1;display:flex;flex-direction:column;gap:8px;padding:8px;}
+ .panel {flex:1;background:rgba(255,255,255,0.08);border-radius:16px;box-shadow:0 0 8px rgba(77,224,255,0.5),inset 0 0 6px rgba(255,255,255,0.1);display:flex;flex-direction:column;}
+ .panel-title {padding:6px 10px;font-size:14px;color:#ffa500;text-shadow:0 0 4px #ffa500;}
+ .chart {flex:1;}
+</style>
+</head>
+<body>
+<header>
+ <img src="" alt="LOGO">
+ <h1>华夏收入混合型证券投资基金前十大重仓股看板</h1>
+ <button onclick="exportCharts()">导出PNG</button>
+</header>
+<div id="main">
+ <div class="col" id="colL">
+  <div class="panel"><div class="panel-title">持仓占比（前十大重仓股）</div><div class="chart" id="chart_pie"></div></div>
+  <div class="panel"><div class="panel-title">行业分布</div><div class="chart" id="chart_industry"></div></div>
+  <div class="panel"><div class="panel-title">单股占比排行</div><div class="chart" id="chart_bar"></div></div>
+ </div>
+ <div class="col" id="colC">
+  <div class="panel"><div class="panel-title">前十大重仓股市值</div><div class="chart" id="chart_value"></div></div>
+  <div class="panel"><div class="panel-title">累计买入/卖出金额</div><div class="chart" id="chart_buy_sell"></div></div>
+ </div>
+ <div class="col" id="colR">
+  <div class="panel"><div class="panel-title">重仓股买入金额排行</div><div class="chart" id="chart_buy"></div></div>
+  <div class="panel"><div class="panel-title">重仓股卖出金额排行</div><div class="chart" id="chart_sell"></div></div>
+ </div>
+</div>
+<script>
+const charts={};
+function init(){
+ charts.pie=echarts.init(document.getElementById('chart_pie'));
+ charts.industry=echarts.init(document.getElementById('chart_industry'));
+ charts.bar=echarts.init(document.getElementById('chart_bar'));
+ charts.value=echarts.init(document.getElementById('chart_value'));
+ charts.buy_sell=echarts.init(document.getElementById('chart_buy_sell'));
+ charts.buy=echarts.init(document.getElementById('chart_buy'));
+ charts.sell=echarts.init(document.getElementById('chart_sell'));
+ 
+ charts.pie.setOption({backgroundColor:'transparent',animationDuration:800,animationEasing:'cubicOut',tooltip:{trigger:'item'},series:[{type:'pie',radius:['40%','70%'],label:{color:'#fff'},data:[
+ {name:'北方华创',value:3.90},{name:'建发股份',value:3.30},{name:'神火股份',value:3.16},{name:'招商银行',value:2.90},{name:'三花智控',value:2.78},{name:'格力电器',value:2.67},{name:'成都银行',value:2.64},{name:'陕西煤业',value:2.61},{name:'中国平安',value:2.47},{name:'东方雨虹',value:2.43}
+ ]}]});
+ charts.industry.setOption({backgroundColor:'transparent',tooltip:{},xAxis:{type:'category',data:['制造业','采矿业','金融业','租赁和商务服务']},yAxis:{type:'value',axisLabel:{color:'#fff',formatter:'{value}%'}},series:[{type:'bar',data:[60.22,4.98,13.16,4.19],itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#4de0ff'},{offset:1,color:'#8000ff'}])}}]});
+ charts.bar.setOption({backgroundColor:'transparent',yAxis:{type:'category',data:['北方华创','建发股份','神火股份','招商银行','三花智控','格力电器','成都银行','陕西煤业','中国平安','东方雨虹'],axisLabel:{color:'#fff'}},xAxis:{type:'value',axisLabel:{color:'#fff',formatter:'{value}%'}},series:[{type:'bar',data:[3.90,3.30,3.16,2.90,2.78,2.67,2.64,2.61,2.47,2.43],itemStyle:{color:'#ffa500'}}]});
+ charts.value.setOption({backgroundColor:'transparent',tooltip:{trigger:'axis'},xAxis:{type:'category',data:['北方华创','建发股份','神火股份','招商银行','三花智控','格力电器','成都银行','陕西煤业','中国平安','东方雨虹'],axisLabel:{color:'#fff'}},yAxis:{type:'value',axisLabel:{color:'#fff'}},series:[{type:'line',smooth:true,data:[64115.4,54245.2,51953.98,47685.36,45651.72,43836.53,43431.39,42844.92,40577.36,39995.27],itemStyle:{color:'#4de0ff'}}]});
+ charts.buy_sell.setOption({backgroundColor:'transparent',legend:{data:['买入','卖出'],textStyle:{color:'#fff'}},tooltip:{trigger:'axis'},xAxis:{type:'category',data:['合计']},yAxis:{type:'value',axisLabel:{color:'#fff'}},series:[{name:'买入',type:'bar',data:[2796918.91],itemStyle:{color:'#4de0ff'}},{name:'卖出',type:'bar',data:[2962717.47],itemStyle:{color:'#ffa500'}}]});
+ charts.buy.setOption({backgroundColor:'transparent',tooltip:{},yAxis:{type:'category',data:['格力电器','神火股份','招商银行','九安医疗','陕西煤业'],axisLabel:{color:'#fff'}},xAxis:{type:'value',axisLabel:{color:'#fff'}},series:[{type:'bar',data:[55144.41,51629.23,46495.08,45677.32,45204.07],itemStyle:{color:'#4de0ff'}}]});
+ charts.sell.setOption({backgroundColor:'transparent',tooltip:{},yAxis:{type:'category',data:['宁德时代','华友钴业','璞泰来','九安医疗','通富微电'],axisLabel:{color:'#fff'}},xAxis:{type:'value',axisLabel:{color:'#fff'}},series:[{type:'bar',data:[75973.51,64989.15,59252.67,53389.31,45012.54],itemStyle:{color:'#ff33aa'}}]});
+}
+function exportCharts(){
+ for(let key in charts){
+ const url=charts[key].getDataURL({pixelRatio:2,backgroundColor:'#fff'});
+ const a=document.createElement('a');
+ a.href=url;a.download=key+'.png';a.click();
+ }
+}
+let resizeTimer;
+let lastW=window.innerWidth,lastH=window.innerHeight;
+window.addEventListener('resize',()=>{
+ clearTimeout(resizeTimer);
+ resizeTimer=setTimeout(()=>{
+ if(window.innerWidth!==lastW||window.innerHeight!==lastH){
+ lastW=window.innerWidth;lastH=window.innerHeight;
+ for(let key in charts){charts[key].resize();}
+ }
+ },150);
+});
+init();
+</script>
+</body>
+</html>

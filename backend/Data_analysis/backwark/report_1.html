@@ -1,0 +1,80 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>华夏收入混合型证券投资基金2024年度业绩看板</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+html,body{
+  margin:0; padding:0; width:100vw; height:100svh; overflow:hidden;
+  font-family: "Segoe UI", Arial, sans-serif; color:#fff;
+  background: radial-gradient(circle at top left,#0f2027,#203a43,#2c5364);
+}
+header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:8px 16px; background:rgba(255,255,255,0.05); backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(255,255,255,0.2);
+}
+header h1{font-size:1.5em; color:#0ff; text-shadow:0 0 6px #0ff;}
+button{
+  background:#0ff; color:#000; border:none; padding:6px 12px; border-radius:8px; cursor:pointer; font-weight:bold;
+}
+#container{display:flex; height:calc(100svh - 50px);}
+.col{flex:1; display:flex; flex-direction:column; overflow:hidden;}
+.panel{
+  flex:1; margin:8px; background:rgba(255,255,255,0.05); backdrop-filter:blur(8px);
+  border-radius:16px; border:1px solid rgba(0,255,255,0.3);
+  box-shadow:0 0 12px rgba(0,255,255,0.2), inset 0 0 8px rgba(255,255,255,0.1);
+  display:flex; flex-direction:column;
+}
+.panel-title{padding:4px 8px; font-size:0.9em; color:#0ff; text-shadow:0 0 4px #0ff;}
+.chart{flex:1;}
+</style>
+</head>
+<body>
+<header>
+  <div></div>
+  <h1>华夏收入混合型证券投资基金2024年度业绩看板</h1>
+  <button onclick="downloadPNGs()">导出PNG</button>
+</header>
+<div id="container">
+  <div class="col" id="colL">
+    <div class="panel"><div class="panel-title">性别占比</div><div class="chart" id="chart_gender"></div></div>
+    <div class="panel"><div class="panel-title">年龄占比</div><div class="chart" id="chart_age"></div></div>
+    <div class="panel"><div class="panel-title">年度净值增长率</div><div class="chart" id="chart_annualGrowth"></div></div>
+  </div>
+  <div class="col" id="colC">
+    <div class="panel"><div class="panel-title">本期利润趋势</div><div class="chart" id="chart_profit"></div></div>
+    <div class="panel"><div class="panel-title">基金 vs 基准</div><div class="chart" id="chart_fundVsBenchmark"></div></div>
+  </div>
+  <div class="col" id="colR">
+    <div class="panel"><div class="panel-title">投资方式人数排行</div><div class="chart" id="chart_rank"></div></div>
+    <div class="panel"><div class="panel-title">行业评分</div><div class="chart" id="chart_category"></div></div>
+    <div class="panel"><div class="panel-title">子类数值</div><div class="chart" id="chart_subcat"></div></div>
+  </div>
+</div>
+<script>
+var charts=[];
+function makeChart(id,opt){var c=echarts.init(document.getElementById(id));c.setOption(opt);charts.push(c);}
+function resizeHandler(){let w=window.innerWidth,h=window.innerHeight;charts.forEach(c=>c.resize());}
+window.addEventListener('resize',()=>{clearTimeout(window.rt);window.rt=setTimeout(resizeHandler,150);});
+function downloadPNGs(){charts.forEach((c,i)=>{var link=document.createElement('a');link.href=c.getDataURL({pixelRatio:2,backgroundColor:'#000'});link.download='chart'+i+'.png';link.click();});}
+// Data from data_json-like structure
+var genderData=[{name:"男性",value:5424},{name:"女性",value:5457}];
+var ageData=[{name:"少年",value:1000},{name:"青年",value:3000},{name:"中年",value:4000},{name:"老年",value:2000},{name:"其他",value:500}];
+var annualGrowth={categories:["2022","2023","2024"],data:[-18.19,-13.35,3.29],unit:"%"};
+var profit={categories:["2022","2023","2024"],data:[-4.52e8,-2.81e8,3.12e7],unit:"元"};
+var fundVsBenchmark={categories:["过去三个月","过去六个月","过去一年","过去三年","过去五年","自成立以来"],series:[{name:"基金",unit:"%",data:[0.28,15.30,3.29,-26.78,17.74,1203.80]},{name:"业绩基准",unit:"%",data:[-1.57,5.72,13.10,8.60,19.59,463.31]}]};
+var rank={categories:["徒步","自驾游","火车","飞机","其他"],data:[90000,70000,50000,20000,10000],unit:"人"};
+var category={categories:["汽车","火车","飞机","自驾游","公共交通","其他"],data:[5,9,10,7,6,3],unit:"分"};
+var subcat={categories:["类1","类2","类3","类4","类5","类6"],data:[20,40,60,80,100,110],unit:"值"};
+makeChart('chart_gender',{backgroundColor:'transparent',tooltip:{trigger:'item'},series:[{type:'pie',radius:['40%','70%'],data:genderData,label:{color:'#fff'},emphasis:{itemStyle:{shadowBlur:10,shadowOffsetX:0,shadowColor:'rgba(0,0,0,0.5)'}}}]});
+makeChart('chart_age',{backgroundColor:'transparent',tooltip:{trigger:'item'},series:[{type:'pie',radius:'65%',data:ageData,label:{color:'#fff'},emphasis:{itemStyle:{shadowBlur:10,shadowOffsetX:0,shadowColor:'rgba(0,0,0,0.5)'}}}]});
+makeChart('chart_annualGrowth',{backgroundColor:'transparent',tooltip:{trigger:'axis'},xAxis:{type:'category',data:annualGrowth.categories},yAxis:{type:'value',axisLabel:{formatter:'{value}'+annualGrowth.unit}},series:[{type:'line',smooth:true,data:annualGrowth.data,itemStyle:{color:'#0ff'}}]});
+makeChart('chart_profit',{backgroundColor:'transparent',tooltip:{trigger:'axis'},xAxis:{type:'category',data:profit.categories},yAxis:{type:'value',axisLabel:{formatter:v=>v.toLocaleString()+profit.unit}},series:[{type:'bar',data:profit.data,itemStyle:{color:'#0ff'}}]});
+makeChart('chart_fundVsBenchmark',{backgroundColor:'transparent',tooltip:{trigger:'axis'},legend:{textStyle:{color:'#fff'}},xAxis:{type:'category',data:fundVsBenchmark.categories},yAxis:{type:'value',axisLabel:{formatter:'{value}%'}},series:fundVsBenchmark.series.map(s=>({name:s.name,type:'line',smooth:true,data:s.data}))});
+makeChart('chart_rank',{backgroundColor:'transparent',tooltip:{trigger:'axis'},xAxis:{type:'value',axisLabel:{formatter:v=>v+rank.unit}},yAxis:{type:'category',data:rank.categories},series:[{type:'bar',data:rank.data,itemStyle:{color:'#0ff'}}]});
+makeChart('chart_category',{backgroundColor:'transparent',tooltip:{trigger:'axis'},xAxis:{type:'category',data:category.categories},yAxis:{type:'value',axisLabel:{formatter:v=>v+category.unit}},series:[{type:'bar',data:category.data,itemStyle:{color:'#0ff'}}]});
+makeChart('chart_subcat',{backgroundColor:'transparent',tooltip:{trigger:'axis'},xAxis:{type:'category',data:subcat.categories},yAxis:{type:'value',axisLabel:{formatter:v=>v+subcat.unit}},series:[{type:'bar',data:subcat.data,itemStyle:{color:'#0ff'}}]});
+</script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<title>对比2023年和2024年的主要财务指标</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+html,body{
+  margin:0;
+  padding:0;
+  width:100vw;
+  height:100svh;
+  overflow:hidden;
+  background:linear-gradient(135deg,#0a0f1f,#1a1f3f);
+  background-size:cover;
+  font-family:"Segoe UI",sans-serif;
+  color:#fff;
+}
+#topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 20px;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(0,255,255,0.2);
+}
+#title{
+  font-size:1.5em;
+  font-weight:bold;
+  color:#0ff;
+  text-shadow:0 0 6px #0ff;
+}
+#cols{display:flex;height:calc(100svh - 60px);}
+.col{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.panel{flex:1;margin:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,255,255,0.2);border-radius:16px;box-shadow:0 0 8px rgba(0,255,255,0.4);display:flex;flex-direction:column;}
+.panel-title{padding:6px 10px;font-size:0.9em;color:#0ff;text-shadow:0 0 4px #0ff;}
+.chart{flex:1;}
+button{background:#0ff;color:#000;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;}
+button:hover{background:#0cc;}
+</style>
+</head>
+<body>
+<div id="topbar">
+  <div id="logo"></div>
+  <div id="title">对比2023年和2024年的主要财务指标</div>
+  <div><button onclick="exportCharts()">导出PNG</button></div>
+</div>
+<div id="cols">
+  <div id="colL" class="col">
+    <div class="panel"><div class="panel-title">基金份额净值增长率对比</div><div id="chart1" class="chart"></div></div>
+    <div class="panel"><div class="panel-title">本期利润对比</div><div id="chart2" class="chart"></div></div>
+    <div class="panel"><div class="panel-title">期末基金资产净值对比</div><div id="chart3" class="chart"></div></div>
+  </div>
+  <div id="colC" class="col">
+    <div class="panel"><div class="panel-title">年度净值增长趋势</div><div id="chart4" class="chart"></div></div>
+    <div class="panel"><div class="panel-title">基金 vs 基准收益率</div><div id="chart5" class="chart"></div></div>
+  </div>
+  <div id="colR" class="col">
+    <div class="panel"><div class="panel-title">加权平均净值利润率对比</div><div id="chart6" class="chart"></div></div>
+    <div class="panel"><div class="panel-title">期末可供分配利润对比</div><div id="chart7" class="chart"></div></div>
+  </div>
+</div>
+<script>
+var charts=[];
+function makeChart(dom,opt){var c=echarts.init(dom);c.setOption(opt);charts.push(c);}
+function exportCharts(){charts.forEach((c,i)=>{var url=c.getDataURL({pixelRatio:2});var a=document.createElement('a');a.href=url;a.download='chart'+(i+1)+'.png';a.click();});}
+function resizeCharts(){let w=window.innerWidth,h=window.innerHeight;charts.forEach(c=>c.resize());}
+var resizeTimeout;window.addEventListener('resize',()=>{clearTimeout(resizeTimeout);resizeTimeout=setTimeout(resizeCharts,150);});
+// chart1 基金份额净值增长率对比
+makeChart(document.getElementById('chart1'),{
+  backgroundColor:'transparent',
+  tooltip:{trigger:'axis'},
+  xAxis:{type:'category',data:['2023','2024'],axisLine:{lineStyle:{color:'#0ff'}}},
+  yAxis:{type:'value',axisLabel:{color:'#0ff',formatter:'{value}%'}},
+  series:[{type:'bar',data:[-13.35,3.29],itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#0ff'},{offset:1,color:'#0cc'}])}}]
+});
+// chart2 本期利润对比
+makeChart(document.getElementById('chart2'),{
+  backgroundColor:'transparent',
+  tooltip:{trigger:'axis',formatter:function(p){return p[0].name+':'+p[0].value.toLocaleString()+'元';}},
+  xAxis:{type:'category',data:['2023','2024'],axisLine:{lineStyle:{color:'#0ff'}}},
+  yAxis:{type:'value',axisLabel:{color:'#0ff'}},
+  series:[{type:'bar',data:[-280792722.57,31179560.82],itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#f80'},{offset:1,color:'#fa0'}])}}]
+});
+// chart3 期末基金资产净值对比
+makeChart(document.getElementById('chart3'),{
+  backgroundColor:'transparent',tooltip:{trigger:'axis'},
+  xAxis:{type:'category',data:['2023','2024'],axisLine:{lineStyle:{color:'#0ff'}}},
+  yAxis:{type:'value',axisLabel:{color:'#0ff'}},
+  series:[{type:'bar',data:[1729207917.71,1642875165.62],itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#08f'},{offset:1,color:'#00a'}])}}]
+});
+// chart4 年度净值增长趋势
+makeChart(document.getElementById('chart4'),{
+  backgroundColor:'transparent',tooltip:{trigger:'axis'},
+  xAxis:{type:'category',data:['2022','2023','2024'],axisLine:{lineStyle:{color:'#0ff'}}},
+  yAxis:{type:'value',axisLabel:{color:'#0ff',formatter:'{value}%'}},
+  series:[{type:'line',smooth:true,data:[-18.19,-13.35,3.29],itemStyle:{color:'#0ff'}}]
+});
+// chart5 基金 vs 基准收益率
+makeChart(document.getElementById('chart5'),{
+  backgroundColor:'transparent',tooltip:{trigger:'axis'},
+  legend:{data:['基金','业绩基准'],textStyle:{color:'#0ff'}},
+  xAxis:{type:'category',data:['过去三个月','过去六个月','过去一年'],axisLine:{lineStyle:{color:'#0ff'}}},
+  yAxis:{type:'value',axisLabel:{color:'#0ff',formatter:'{value}%'}},
+  series:[{name:'基金',type:'line',smooth:true,data:[0.28,15.30,3.29]},{name:'业绩基准',type:'line',smooth:true,data:[-1.57,5.72,13.10]}]
+});
+// chart6 加权平均净值利润率对比
+makeChart(document.getElementById('chart6'),{
+  backgroundColor:'transparent',tooltip:{trigger:'axis'},
+  xAxis:{type:'category',data:['2023','2024'],axisLine:{lineStyle:{color:'#0ff'}}},
+  yAxis:{type:'value',axisLabel:{color:'#0ff',formatter:'{value}%'}},
+  series:[{type:'bar',data:[-13.73,2.00],itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#f0f'},{offset:1,color:'#808'}])}}]
+});
+// chart7 期末可供分配利润对比
+makeChart(document.getElementById('chart7'),{
+  backgroundColor:'transparent',tooltip:{trigger:'axis'},
+  xAxis:{type:'category',data:['2023','2024'],axisLine:{lineStyle:{color:'#0ff'}}},
+  yAxis:{type:'value',axisLabel:{color:'#0ff'}},
+  series:[{type:'bar',data:[1420184384.69,1358634940.79],itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#0fa'},{offset:1,color:'#0a5'}])}}]
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+setup.txt
+guide.ipynb
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# API keys and credentials
+**/config.py
+**/secrets.py
+**/*secret*
+**/*key*
+**/*credential*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Output directories
+output/
+results/
+*.html
+!frontend/dist/*.html
